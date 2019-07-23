@@ -1,0 +1,180 @@
+<html>
+	<head> 
+		<title> CodePlayer </title> 
+		<script type="text/javascript" src = "jquery.min.js" > 
+		</script> 
+		<script src="jquery-ui/jquery-ui.js"></script>
+		<link href="jquery-ui/jquery-ui.css" rel="stylesheet">
+		
+		<style> 
+			body {
+				margin: 0 auto;
+				font-family: Helvetica, sans-serif;
+			}
+			#header {
+				background-color: #ddd; 
+				padding: 5px;
+				float: left;
+				width: 100%;
+	
+			}
+			
+			#title {
+				float: left;
+				width:250px;
+			}
+			
+			li {
+				list-style: none;
+				border: 1px black solid;
+				padding: 5px;
+				margin: 5px;
+				display: inline-block;
+				float: left;
+				
+			}
+			
+			.textAreas {
+				width: 25%; 
+				height: 100%;
+				font-family: Helvetica, sans-serif;
+				float: left;
+				
+			}
+			
+			#outputSection 
+			{
+				font-size: 60%;
+				text-align: center;
+				border: none;
+			}
+			
+		
+	
+		</style> 
+		
+	</head> 
+	
+	<body> 
+	
+		<div id="header">
+			<h1 id="title" > CodePlayer </h1> 			
+			<ul> 
+				<li id="HTML" class="toggleButtons"> HTML  </li> 
+				<li id="CSS" class="toggleButtons"> CSS </li> 
+				<li id="JavaScript" class="toggleButtons"> JavaScript </li> 
+				<li id="Output" class="toggleButtons"> Output </li> 
+			
+			<ul> 
+		</div> 
+		
+		<div> 
+			<textarea id ="htmlSection" class="textAreas" placeholder="HTML"></textarea>
+			<textarea id ="CSSSection" class="textAreas" placeholder="CSS"></textarea>
+			<textarea id ="javascriptSection" class="textAreas" placeholder="JavaScript"></textarea>		
+			<iframe id="outputSection" class="textAreas"></iframe> 			
+		</div> 
+		
+			
+		<script type="text/javascript"> 
+		
+			function windowController (log, id) 
+			{
+				if (log == 1) 
+				{
+					$(id).hide(); 
+					log -= 1;
+				}
+				
+				else if (log == 0) {
+					$(id).show(); 
+					log += 1;
+				}
+				
+				return log; 
+				
+			}
+			
+			function windowResize (par1, par2, par3, par4) 
+			{
+				var resizePar = 0;  	
+				resizePar = par1 + par2 + par3 + par4; 
+				switch (resizePar) 
+				{
+					case 1: $(".textAreas").width("100%"); 
+						break;
+					case 2: $(".textAreas").width("49%"); 
+						break;
+					case 3: 
+						$(".textAreas").width("33%"); 
+						break;
+					case 4: $(".textAreas").width("24%"); 
+						break;
+					default: break; 
+					
+				}
+			}
+			
+			
+			function updateOutput() {
+				$("iframe").contents().find("html").html("<html><head><style type='text/css'>" + $("#CSSSection").val() + "</style></head><body>" + $("#htmlSection").val() + "</body></html>");
+				
+				document.getElementById("outputSection").contentWindow.eval($("#javascriptSection").val());
+			 
+			}
+			
+			var HTMLlog = 1, CSSlog = 1, javascriptLog = 1, id, outputLog = 1; 
+			$(".toggleButtons").click(function () 
+			{	
+				id = event.target.id; 
+				
+				if (id == "HTML") 
+				{
+					id = "#htmlSection";
+					HTMLlog = windowController(HTMLlog, id); 
+				}
+				
+				else if (id == "CSS") 
+				{
+					id = "#CSSSection";
+					CSSlog = windowController(CSSlog, id); 
+				}
+				
+				else if (id == "JavaScript") 
+				{
+					
+					id = "#javascriptSection";
+					javascriptLog = windowController(javascriptLog, id); 
+				}
+				
+				else if (id == "Output") 
+				{
+					id = "#outputSection";
+					outputLog = windowController(outputLog, id); 
+				}
+				
+				windowResize(HTMLlog, CSSlog, javascriptLog, outputLog); 
+				
+			}); 
+			
+			
+			$(".toggleButtons").mouseenter(function () 
+			{
+				$(this).css("background-color", "#7e8082"); 
+			});
+			
+			$(".toggleButtons").mouseleave(function () 
+			{
+				$(this).css("background-color", "#ddd"); 
+			});
+				updateOutput(); 
+			$("textarea").on('change keyup paste', function ()
+			{
+				updateOutput(); 
+			}); 
+		</script> 
+	</body> 
+
+
+
+</html> 
